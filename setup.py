@@ -13,13 +13,13 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='jhsrobo',
-    maintainer_email='iankimcool@gmail.com',
+    maintainer='Ian Kim',
+    maintainer_email='KimI27@student.jhs.net',
     description='TODO: Package description',
-    license='TODO: License declaration',
+    license='MIT',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': [
+        'console_scripts', 'coral_move': [
         ],
     },
 )
