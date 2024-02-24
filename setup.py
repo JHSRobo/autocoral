@@ -19,7 +19,8 @@ setup(
     license='MIT',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts', 'coral_move': [
+        'console_scripts': [
+            'coral_move = coral_move.coral_move:main'
         ],
     },
 )
