@@ -4,9 +4,9 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 from std_msgs.msg import Float32
 
-class auto(Node):
+class Auto(Node):
     def __init__(self):
-        super().__init__('auto')
+        super().__init__('Auto')
         #self.cam_subscriber = self.create_subscription(Bool, 'reached', self.callback2, 10)
         self.sensor_subscriber = self.create_subscription(Float32, 'depth_sensor', self.callback, 10)
         self.vector = self.create_publisher(Twist, 'autovector', 10)
@@ -14,9 +14,9 @@ class auto(Node):
         self.box = False
         self.check = False
     def callback(self, msgs):
-        self.logger.info(msgs)
+        self.logger.info(str(msgs.data))
         vector = Twist()
-        if msgs < 10 and self.check == False:
+        if msgs.data < 10 and self.check == False:
             vector.linear.x = 0
             vector.linear.y = 0
             vector.linear.z = -1
@@ -30,7 +30,7 @@ class auto(Node):
                 vector.linear.z = 0
                 vector.angular.x = 0
                 vector.angular.z = 0
-            elif self.box == True and msgs > 11:
+            elif self.box == True and msgs.data > 11:
                 vector.linear.x = 0
                 vector.linear.y = 0
                 vector.linear.z = 1
@@ -45,10 +45,10 @@ class auto(Node):
 
 
 def main(args=None):
-    rclpy.init()
-    Auto = auto()
-    rclpy.spin(Auto)
-    Auto.destroy_node()
+    rclpy.init(args=args)
+    auto = Auto()
+    rclpy.spin(auto)
+    auto.destroy_node()
     rclpy.shutdown()
 
 
