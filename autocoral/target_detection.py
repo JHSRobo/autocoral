@@ -5,6 +5,7 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2
 import numpy as np
+from core.msg import RectDimensions
 
 class Auto(Node):
    def __init__(self):
@@ -16,10 +17,12 @@ class Auto(Node):
        self.bridge = CvBridge()
       
        self.status = self.create_publisher(Bool, 'reached', 10)
+       self.red_outline = self.create_publisher(RectDimensions, 'parameters', 10)
        self.camera_subscriber = self.create_subscription(Image, "camera_feed", self.img_callback, 10)
 
    def img_callback(self, msg):
        msg2 = Bool()
+       msg3 = RectDimensions()
 
        imageFrame = self.bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
        h, w, c = imageFrame.shape
@@ -39,10 +42,15 @@ class Auto(Node):
 
        for pic, contour in enumerate(contours):
            area = cv2.contourArea(contour)
-           if(area > 300):
+           if(area > 2000):
             x, y, w, h = cv2.boundingRect(contour)
-            imageFrame = cv2.rectangle(imageFrame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            cv2.putText(imageFrame, "Target Area, " + str(x) + ", " + str(y), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0))
+            
+            msg3.x = x
+            msg3.y = y
+            msg3.w = w
+            msg3.h = h
+            self.red_outline.publish(msg3)
+            
             if (y > frameHeight / 2 - h/2):
                 msg2.data = True
             else:
