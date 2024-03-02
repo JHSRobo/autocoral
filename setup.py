@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'coral_move = coral_move.coral_move:main'
-            'auto_movement = auto_movement.auto_movement:main'
+            'auto_movement = coral_move.auto_movement:main'
         ],
     },
 )
