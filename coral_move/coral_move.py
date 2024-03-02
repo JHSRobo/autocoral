@@ -46,9 +46,9 @@ class auto(Node):
 
 def main(args=None):
     rclpy.init()
-    auto = auto()
-    rclpy.spin(auto)
-    auto.destroy_node()
+    Auto = auto()
+    rclpy.spin(Auto)
+    Auto.destroy_node()
     rclpy.shutdown()
 
 
