@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'coral_move'
+package_name = 'autocoral'
 
 setup(
     name=package_name,
@@ -13,15 +13,15 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Drew Eandi',
+    maintainer='jhsrobo',
     maintainer_email='eandid27@student.jhs.net',
     description='Autonomous movement for brain coral task',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'coral_move = coral_move.coral_move:main'
-            'target_detection = coral_move.target_detection:main'
+            'coral_move = autocoral.coral_move:main',
+            'target_detection = autocoral.target_detection:main'
         ],
     },
 )
