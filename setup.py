@@ -13,9 +13,9 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Ian Kim',
-    maintainer_email='KimI27@student.jhs.net',
-    description='TODO: Package description',
+    maintainer='Drew Eandi',
+    maintainer_email='eandid27@student.jhs.net',
+    description='Autonomous movement for brain coral task',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
