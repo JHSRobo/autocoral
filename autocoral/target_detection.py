@@ -65,19 +65,12 @@ class Auto(Node):
         if msg2.data is not False:
             self.get_logger().info('Publishing: "%s"' % msg2.data)
 
-    def on_shutdown(self):
-        # Publish default RectDimensions message with all values set to 0 when node is shutting down
-        self.red_outline.publish(RectDimensions())
-
 def main():
     rclpy.init()
     target_detection = Auto()
-    try:
-        rclpy.spin(target_detection)
-    finally:
-        target_detection.on_shutdown()
-        target_detection.destroy_node()
-        rclpy.shutdown()
+    rclpy.spin(target_detection)
+    target_detection.destroy_node()
+    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
