@@ -29,7 +29,7 @@ class Auto(Node):
     
             imageFrame = self.bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
             h, w, c = imageFrame.shape
-            frameHeight = int(w)
+            frameHeight = int(h)
     
             hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
             
