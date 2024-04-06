@@ -7,6 +7,7 @@ from std_msgs.msg import Float32
 class Auto(Node):
     def __init__(self):
         super().__init__('Auto')
+        self.cam_subscriber = self.create_subscription(Bool, 'reached', self.callback2, 10)
         self.sensor_subscriber = self.create_subscription(Float32, 'depth_sensor', self.callback, 10)
         self.vector = self.create_publisher(Twist, 'autovector', 10)
         self.logger = self.get_logger()
@@ -51,6 +52,8 @@ class Auto(Node):
                     new_parameter = [temp]
                     self.set_parameters(new_parameter)
             self.vector.publish(vector)
+    def callback2(self, msgs):
+        self.box = msgs.data
         
 
 
