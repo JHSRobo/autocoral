@@ -3,6 +3,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 from std_msgs.msg import Float32
+from rclpy.parameter import Parameter
 
 class Auto(Node):
     def __init__(self):
@@ -27,7 +28,7 @@ class Auto(Node):
             if msgs.data < 10 and self.check == False:
                 vector.linear.x = 0
                 vector.linear.y = 0
-                vector.linear.z = -0.5
+                vector.linear.z = 0.5
                 vector.angular.x = 0
                 vector.angular.z = 0
             else:
@@ -41,11 +42,11 @@ class Auto(Node):
                 elif self.box == True and msgs.data > 11:
                     vector.linear.x = 0
                     vector.linear.y = 0
-                    vector.linear.z = 0.5
+                    vector.linear.z = -0.5
                     vector.angular.x = 0
                     vector.angular.z = 0
                 else:
-                    temp = rclpy.parameter.Parameter(
+                    temp = Parameter(
                     'autonomous_task',
                     rclpy.Parameter.Type.BOOL,
                     False)
@@ -54,6 +55,7 @@ class Auto(Node):
             self.vector.publish(vector)
     def callback2(self, msgs):
         self.box = msgs.data
+        self.logger.info(self.box)
         
 
 
