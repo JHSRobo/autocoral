@@ -22,7 +22,7 @@ class Auto(Node):
         self.check = False
         self.boolean = False
         self.declare_parameter('autonomous_task', self.boolean)
-        self.x = 0;
+        self.x = 0
         self.coordinatex = 0
         self.coordinatey = 0
         self.rangex = []
