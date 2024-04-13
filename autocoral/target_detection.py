@@ -6,6 +6,7 @@ from cv_bridge import CvBridge
 import cv2
 import numpy as np
 from core.msg import RectDimensions
+from geometry_msgs.msg import Vector3
 
 class Auto(Node):
     def __init__(self):
@@ -18,6 +19,7 @@ class Auto(Node):
       
         self.status = self.create_publisher(Bool, 'reached', 10)
         self.red_outline = self.create_publisher(RectDimensions, 'parameters', 10)
+        self.coordinates = self.create_publisher(Vector3, 'coordinates', 10)
         self.camera_subscriber = self.create_subscription(Image, "camera_feed", self.img_callback, 10)
 
     def img_callback(self, msg):
@@ -25,6 +27,7 @@ class Auto(Node):
         if my_param == True:
             msg2 = Bool()
             msg3 = RectDimensions()
+            msg4 = Vector3()
             contours_detected = False
     
             imageFrame = self.bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
@@ -45,13 +48,19 @@ class Auto(Node):
     
             for pic, contour in enumerate(contours):
                 area = cv2.contourArea(contour)
-                if(area > 2000):
+                if(area > 1000):
                     x, y, w, h = cv2.boundingRect(contour)
+
                     msg3.x = x
                     msg3.y = y
                     msg3.w = w
                     msg3.h = h
+
+                    msg4.x = x + w/2
+                    msg4.y = y + y/2
+                    msg4.z = 0
                     self.red_outline.publish(msg3)
+                    self.coordinates.publish(msg4)
                     contours_detected = True
                     
                     if (y > frameHeight / 2 - h/2):
