@@ -20,12 +20,14 @@ class Auto(Node):
         self.logger = self.get_logger()
         self.box = False
         self.check = False
-        self.declare_parameter('cmd_vel', False)
+        self.boolean = False
+        self.declare_parameter('cmd_vel', self.boolean)
         self.x = 0
         self.coordinatex = 0
         self.coordinatey = 0
         self.rangex = [1900, 1020]
         self.rangey = [500, 580]
+        self.timer = self.create_timer(0.1, self.timer_callback)
         #self.create_timer(0.1, self.testing)
 #    def testing(self):
 #        self.boolean = self.get_parameter('autonomous_task').value
@@ -33,7 +35,6 @@ class Auto(Node):
 #            self.logger.info("auto activated")
     def callback(self, msgs):
         self.logger.info(str(msgs.data))
-        self.boolean = self.get_parameter('autonomous_task').value
         if self.boolean == True:
             vector = Twist()
             vector.linear.x = 0
@@ -77,6 +78,8 @@ class Auto(Node):
     def callback4(self, msgs):
         self.coordinatex = msgs.x
         self.coordinatey = msgs.y
+    def timer_callback(self):
+        self.boolean = self.get_parameter('autonomous_task').value
         
 
 
