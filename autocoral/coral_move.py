@@ -20,13 +20,12 @@ class Auto(Node):
         self.logger = self.get_logger()
         self.box = False
         self.check = False
-        self.boolean = False
-        self.declare_parameter('autonomous_task', self.boolean)
+        self.declare_parameter('cmd_vel', False)
         self.x = 0
         self.coordinatex = 0
         self.coordinatey = 0
-        self.rangex = []
-        self.rangey = []
+        self.rangex = [1900, 1020]
+        self.rangey = [500, 580]
         #self.create_timer(0.1, self.testing)
 #    def testing(self):
 #        self.boolean = self.get_parameter('autonomous_task').value
