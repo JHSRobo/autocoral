@@ -20,6 +20,7 @@ class Auto(Node):
         self.logger = self.get_logger()
         self.box = False
         self.check = False
+        self.boolean = False
         self.declare_parameter('autonomous_task', self.boolean)
         self.x = 0;
         self.coordinatex = 0
