@@ -6,16 +6,22 @@ from std_msgs.msg import Float32
 from rclpy.parameter import Parameter
 from geometry_msgs.msg import Vector3
 
-#dimensions of the camera frame: 1920 by 1080
+# note to self: dimensions of the camera frame: 1920 by 1080
 
 class Coral(Node):
     def __init__(self):
         super().__init__('Coral')
+
+        #subscriptions
         self.cam_subscriber = self.create_subscription(Bool, 'reached', self.callback2, 10)
         self.location_subscriber = self.create_subscription(Vector3, "coordinates", self.callback4, 10)
         self.sensor_subscriber = self.create_subscription(Float32, 'depth_sensor', self.callback, 10)
         self.imu_subscriber = self.create_subscription(Vector3, "orientation_sensor", self.callback3, 10)
-        self.vector = self.create_publisher(Twist, 'autovector', 10)
+
+        #publisher
+        self.vector = self.create_publisher(Twist, 'cmd_vel', 10)
+
+        #other member variables
         self.logger = self.get_logger()
         self.box = False
         self.check = False
@@ -30,7 +36,8 @@ class Coral(Node):
         # Add callback for parameter changes
         self.add_on_set_parameters_callback(self.parameter_callback)
 
-    def parameter_callback(self, parameters):
+
+    def parameter_callback(self, parameters): # used to update parameter
         for parameter in parameters:
             if parameter.name == 'autonomous_task':
                 if parameter.successful:
@@ -38,17 +45,12 @@ class Coral(Node):
                 else:
                     self.logger.warn("Failed to update autonomous task parameter")
 
+    
     def callback(self, msgs):
         self.logger.info(str(msgs.data))
         self.autonomous_task = self.get_parameter('autonomous_task').value
         if self.autonomous_task:
-            self.logger.info("Autonomous program activated")
             vector = Twist()
-            vector.linear.x = 0
-            vector.linear.y = 0
-            vector.linear.z = 0
-            vector.angular.x = 0
-            vector.angular.z = 0
             if msgs.data < 9 and self.check == False:
                 vector.linear.z = 0.5
             else:
@@ -73,6 +75,7 @@ class Coral(Node):
 
             self.vector.publish(vector)
 
+    # callback2, callback3, and callback 4 only update variables which are used in the primary callback function
     def callback2(self, msgs):
         self.box = msgs.data
         self.logger.info(self.box)
