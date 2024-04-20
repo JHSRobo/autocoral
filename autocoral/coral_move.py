@@ -13,10 +13,9 @@ class Coral(Node):
         super().__init__('Coral')
 
         #subscriptions
-        self.cam_subscriber = self.create_subscription(Bool, 'reached', self.callback2, 10)
-        self.location_subscriber = self.create_subscription(Vector3, "coordinates", self.callback4, 10)
-        self.sensor_subscriber = self.create_subscription(Float32, 'depth_sensor', self.callback, 10)
-        self.imu_subscriber = self.create_subscription(Vector3, "orientation_sensor", self.callback3, 10)
+        self.depth_subscriber = self.create_subscription(Float32, 'depth_sensor', self.callback, 10)
+        self.stop_subscriber = self.create_subscription(Bool, 'reached', self.callback2, 10)
+        self.adjustment_subscriber = self.create_subscription(Vector3, "coordinates", self.callback3, 10)
 
         #publisher
         self.vector = self.create_publisher(Twist, 'cmd_vel', 10)
@@ -80,10 +79,8 @@ class Coral(Node):
         self.box = msgs.data
         self.logger.info(self.box)
 
-    def callback3(self, msgs):
-        self.x = msgs.x
 
-    def callback4(self, msgs):
+    def callback3(self, msgs):
         self.coordinatex = msgs.x
         self.coordinatey = msgs.y
 
