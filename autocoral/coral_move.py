@@ -22,9 +22,10 @@ class Coral(Node):
 
         #other member variables
         self.logger = self.get_logger()
+        
         self.box = False
         self.check = False
-        self.x = 0
+        
         self.coordinatex = 0
         self.coordinatey = 0
         self.rangex = [1900, 1020]
@@ -51,12 +52,11 @@ class Coral(Node):
         if self.autonomous_task:
             vector = Twist()
             if msgs.data < 9 and self.check == False:
-                vector.linear.z = 0.5
+                    vector.linear.z = 0.5
             else:
                 self.check = True
                 if self.box == False:
                     vector.linear.x = 0.5
-                    vector.angular.x = 1-self.x
                 elif self.box == True and msgs.data > 11:
                     if self.coordinatex < self.rangex[0]:
                         vector.linear.y = -0.3
