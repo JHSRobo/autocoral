@@ -51,13 +51,10 @@ class Coral(Node):
         self.autonomous_task = self.get_parameter('autonomous_task').value
         if self.autonomous_task:
             vector = Twist()
-            if msgs.data < 3 and self.check == False:
+            if self.box == False:
                     vector.linear.z = 0.5
             else:
-                self.check = True
-                if self.box == False:
-                    vector.linear.x = 0.5
-                elif self.box == True and msgs.data > 11:
+                if msgs.data > 11:
                     if self.coordinatex < self.rangex[0]:
                         vector.linear.y = -0.3
                     if self.coordinatex > self.rangex[1]:
