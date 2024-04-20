@@ -69,7 +69,6 @@ class Coral(Node):
                     else:
                         vector.linear.z = -0.5
                 else:
-                    # No need to update the parameter here
                     temp = Parameter('autonomous_task',rclpy.Parameter.Type.BOOL,False)
                     new_parameter = [temp]
                     self.set_parameters(new_parameter)
