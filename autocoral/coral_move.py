@@ -28,7 +28,7 @@ class Coral(Node):
         
         self.coordinatex = 0
         self.coordinatey = 0
-        self.rangex = [1900, 1020]
+        self.rangex = [900, 1020]
         self.rangey = [500, 580]
         
         self.declare_parameter('autonomous_task', False)
