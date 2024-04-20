@@ -1,4 +1,4 @@
-import rclpy
+cimport rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
@@ -70,7 +70,10 @@ class Coral(Node):
                         vector.linear.z = -0.5
                 else:
                     # No need to update the parameter here
-                    pass
+                    temp = Parameter('autonomous_task',rclpy.Parameter.Type.BOOL,False)
+                    new_parameter = [temp]
+                    self.set_parameters(new_parameter)
+
 
             self.vector.publish(vector)
 
