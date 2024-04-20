@@ -51,7 +51,7 @@ class Coral(Node):
         self.autonomous_task = self.get_parameter('autonomous_task').value
         if self.autonomous_task:
             vector = Twist()
-            if msgs.data < 9 and self.check == False:
+            if msgs.data < 3 and self.check == False:
                     vector.linear.z = 0.5
             else:
                 self.check = True
