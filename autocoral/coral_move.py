@@ -6,6 +6,7 @@ from std_msgs.msg import Float32
 from rclpy.parameter import Parameter
 from geometry_msgs.msg import Vector3
 from rcl_interfaces.msg import SetParametersResult
+import matplotlib as plt
 
 Kp_x = 0.5  # proportional gain for x
 Ki_x = 0.01  # integral gain for x
@@ -46,6 +47,12 @@ class Coral(Node):
 
         self.add_on_set_parameters_callback(self.parameter_callback)
 
+        self.time_data = []
+        self.error_x_data = []
+        self.error_y_data = []
+        
+        self.start_time = self.get_clock().now()
+
     def parameter_callback(self, parameters):
         for parameter in parameters:
             if parameter.name == 'autonomous_task':
@@ -56,6 +63,9 @@ class Coral(Node):
         return SetParametersResult(successful=True)
 
     def callback(self, msgs):
+        current_time = self.get_clock().now()
+        elapsed_time = (current_time - self.start_time).nanoseconds / 1e9  #convert to seconds
+        
         self.logger.info(str(msgs.data))
         self.autonomous_task = self.get_parameter('autonomous_task').value
         if self.autonomous_task:
@@ -73,6 +83,10 @@ class Coral(Node):
 	
             control_x = self.saturate(control_x, 1.0)
             control_y = self.saturate(control_y, 1.0)
+
+            self.time_data.append(elapsed_time)
+            self.error_x_data.append(error_x)
+            self.error_y_data.append(error_y)
 
             if not self.box:
                 vector.linear.z = 0.5
@@ -100,11 +114,26 @@ class Coral(Node):
     @staticmethod
     def saturate(value, limit):
         return max(min(value, limit), -limit)
+    
+    def plot_data(self):
+        plt.figure(figsize=(10, 8))
+
+        #plt.subplot(1, 1, 1)
+        plt.plot(self.time_data, self.error_x_data, label='Error X')
+        plt.plot(self.time_data, self.error_y_data, label='Error Y')
+        plt.title('Errors over Time')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Error')
+        plt.legend()
+
+        plt.tight_layout()
+        plt.show()
 
 def main(args=None):
     rclpy.init(args=args)
     coral_move = Coral()
     rclpy.spin(coral_move)
+    coral_move.plot_data()
     coral_move.destroy_node()
     rclpy.shutdown()
 
