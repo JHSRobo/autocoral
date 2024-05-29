@@ -5,6 +5,7 @@ from std_msgs.msg import Bool
 from std_msgs.msg import Float32
 from rclpy.parameter import Parameter
 from geometry_msgs.msg import Vector3
+from rcl_interfaces.msg import SetParametersResult
 
 Kp_x = 0.5  # proportional gain for x
 Ki_x = 0.01  # integral gain for x
@@ -30,10 +31,10 @@ class Coral(Node):
         
         self.coordinatex = 0
         self.coordinatey = 0
-        self.rangex = [640, 800] #880, 1040
-        self.rangey = [325, 485] #480, 600
-        self.centerX = 720 #960
-        self.centerY = 405 #540
+        self.rangex = [640, 800]
+        self.rangey = [325, 485]
+        self.centerX = 720
+        self.centerY = 405
 
         self.prev_error_x = 0
         self.integral_x = 0
@@ -48,12 +49,12 @@ class Coral(Node):
     def parameter_callback(self, parameters):
         for parameter in parameters:
             if parameter.name == 'autonomous_task':
-                if parameter.successful:
+                if parameter.value:
                     self.logger.info("Autonomous task parameter updated: {}".format(parameter.value))
                 else:
-                    self.logger.warn("Failed to update autonomous task parameter")
+                    self.logger.info("Autonomous task parameter updated: {}".format(parameter.value))
+        return SetParametersResult(successful=True)
 
-    
     def callback(self, msgs):
         self.logger.info(str(msgs.data))
         self.autonomous_task = self.get_parameter('autonomous_task').value
@@ -73,9 +74,9 @@ class Coral(Node):
             control_x = self.saturate(control_x, 1.0)
             control_y = self.saturate(control_y, 1.0)
 
-            if self.box == False:
-                    vector.linear.z = 0.5
-            elif self.box == True:
+            if not self.box:
+                vector.linear.z = 0.5
+            else:
                 if (self.coordinatex < self.rangex[0] or self.coordinatex > self.rangex[1]) or (self.coordinatey < self.rangey[0] or self.coordinatey > self.rangey[1]):
                     vector.linear.y = 0.3 + control_x
                     vector.linear.x = 0.3 + control_y
@@ -90,12 +91,13 @@ class Coral(Node):
 
     def callback2(self, msgs):
         self.box = msgs.data
-        self.logger.info(self.box)
+        self.logger.info(str(self.box))
 
     def callback3(self, msgs):
         self.coordinatex = msgs.x
         self.coordinatey = msgs.y
 
+    @staticmethod
     def saturate(value, limit):
         return max(min(value, limit), -limit)
 
