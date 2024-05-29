@@ -19,6 +19,7 @@
   <depend>sensor_msgs</depend>
   <depend>python-numpy</depend>
   <depend>opencv-python</depend>
+  <depend>python-matplotlib</depend>
 
   <export>
     <build_type>ament_python</build_type>
